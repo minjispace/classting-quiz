@@ -28,7 +28,7 @@ const getQuizData = async (quiz: QuizType) => {
     params,
   });
 
-  return response.data;
+  return response.data.results;
 };
 
 export { getQuizData };
