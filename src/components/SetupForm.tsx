@@ -5,7 +5,7 @@ import {
   difficultyOptions,
   typeOptions,
 } from "../utils/dataOption";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { getQuizData } from "../api/quizAPI";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
@@ -25,12 +25,15 @@ const SetupForm = () => {
     difficulty: "any",
     type: "any",
   });
-  // Access the client
-  const queryClient = useQueryClient();
 
   // SetupForm 컴포넌트 내에서 사용
-  const { data, isLoading } = useQuery("quizData", () => getQuizData(quiz), {
+  const { isLoading, refetch } = useQuery("quizData", () => getQuizData(quiz), {
     enabled: false,
+    onSuccess: (data) => {
+      if (data) {
+        navigate("quiz");
+      }
+    },
   });
 
   // handleChange
@@ -43,13 +46,7 @@ const SetupForm = () => {
   // handleSubmit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    // getQuizData api호출
-    queryClient.prefetchQuery("quizData", () => getQuizData(quiz));
-
-    if (data) {
-      navigate("quiz");
-    }
+    refetch();
   };
 
   // if isLoading
