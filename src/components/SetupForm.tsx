@@ -7,6 +7,7 @@ import {
 } from "../utils/dataOption";
 import { useQuery, useQueryClient } from "react-query";
 import { getQuizData } from "../api/quizAPi";
+import Loading from "./Loading";
 
 export type QuizType = {
   amount: number;
@@ -48,6 +49,9 @@ const SetupForm = () => {
     // getQuizData api호출
     queryClient.prefetchQuery("quizData", () => getQuizData(quiz));
   };
+
+  // if isLoading
+  if (isLoading) return <Loading />;
 
   return (
     <section>
