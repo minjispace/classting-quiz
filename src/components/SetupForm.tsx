@@ -6,8 +6,9 @@ import {
   typeOptions,
 } from "../utils/dataOption";
 import { useQuery, useQueryClient } from "react-query";
-import { getQuizData } from "../api/quizAPi";
+import { getQuizData } from "../api/quizAPI";
 import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
 
 export type QuizType = {
   amount: number;
@@ -17,6 +18,7 @@ export type QuizType = {
 };
 
 const SetupForm = () => {
+  const navigate = useNavigate();
   const [quiz, setQuiz] = useState<QuizType>({
     amount: 1,
     category: "any",
@@ -27,13 +29,9 @@ const SetupForm = () => {
   const queryClient = useQueryClient();
 
   // SetupForm 컴포넌트 내에서 사용
-  const { data, isLoading, isError, error } = useQuery(
-    "quizData",
-    () => getQuizData(quiz),
-    {
-      enabled: false,
-    },
-  );
+  const { data, isLoading } = useQuery("quizData", () => getQuizData(quiz), {
+    enabled: false,
+  });
 
   // handleChange
   const handleChange = (e: ChangeEvent) => {
@@ -48,6 +46,10 @@ const SetupForm = () => {
 
     // getQuizData api호출
     queryClient.prefetchQuery("quizData", () => getQuizData(quiz));
+
+    if (data) {
+      navigate("quiz");
+    }
   };
 
   // if isLoading
