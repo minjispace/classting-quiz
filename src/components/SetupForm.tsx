@@ -5,6 +5,8 @@ import {
   difficultyOptions,
   typeOptions,
 } from "../utils/dataOption";
+import { useQuery, useQueryClient } from "react-query";
+import { getQuizData } from "../api/quizAPi";
 
 export type QuizType = {
   amount: number;
@@ -20,6 +22,17 @@ const SetupForm = () => {
     difficulty: "any",
     type: "any",
   });
+  // Access the client
+  const queryClient = useQueryClient();
+
+  // SetupForm 컴포넌트 내에서 사용
+  const { data, isLoading, isError, error } = useQuery(
+    "quizData",
+    () => getQuizData(quiz),
+    {
+      enabled: false,
+    },
+  );
 
   // handleChange
   const handleChange = (e: ChangeEvent) => {
@@ -31,6 +44,9 @@ const SetupForm = () => {
   // handleSubmit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // getQuizData api호출
+    queryClient.prefetchQuery("quizData", () => getQuizData(quiz));
   };
 
   return (
