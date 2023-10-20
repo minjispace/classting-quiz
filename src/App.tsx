@@ -1,7 +1,8 @@
 import "./App.css";
+import SetupForm from "./components/SetupForm";
 
 function App() {
-  return <div>home</div>;
+  return <SetupForm />;
 }
 
 export default App;
