@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { getQuizData } from "../api/quizAPI";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
+import { useQuizContext } from "../context/quizContext";
 
 export type QuizType = {
   amount: number;
@@ -18,7 +19,10 @@ export type QuizType = {
 };
 
 const SetupForm = () => {
+  const { startQuizTime } = useQuizContext();
   const navigate = useNavigate();
+
+  // state define
   const [quiz, setQuiz] = useState<QuizType>({
     amount: 1,
     category: "any",
@@ -46,6 +50,7 @@ const SetupForm = () => {
   // handleSubmit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    startQuizTime();
     refetch();
   };
 
