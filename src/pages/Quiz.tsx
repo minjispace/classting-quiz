@@ -18,6 +18,7 @@ const Quiz = () => {
     useState<correctListType>("정답을 클릭 해주세요");
   const [isNextOn, setIsNextOn] = useState(false);
   const [timer, setTimer] = useState<number>(0);
+  const [answers, setAnswers] = useState<string[]>([]);
 
   // get quiz cached data from react-query
   const cache = useQueryClient();
@@ -63,15 +64,6 @@ const Quiz = () => {
     setIsCorrect("정답을 클릭 해주세요");
   };
 
-  // create answersList
-  let answers = [...incorrect_answers];
-
-  // 퀴즈 데이터가 있을 때 초기에 한 번만 무작위로 섞어서 answers 배열을 생성
-  if (data) {
-    const { incorrect_answers, correct_answer } = data[index];
-    answers = [...incorrect_answers, correct_answer];
-  }
-
   // quizTime setting
   useEffect(() => {
     if (quizResult.startTime !== null) {
@@ -89,8 +81,22 @@ const Quiz = () => {
 
   // 문제를 불러올 때만 섞기
   useEffect(() => {
-    // answers 배열을 무작위로 섞기
-    answers.sort(() => Math.random() - 0.5);
+    if (data) {
+      const randomizedAnswers = [...incorrect_answers, correct_answer];
+
+      // 문제의 정답 위치를 무작위로 바꿈
+      const randomIndex = Math.floor(Math.random() * randomizedAnswers.length);
+      [
+        randomizedAnswers[randomIndex],
+        randomizedAnswers[randomizedAnswers.length - 1],
+      ] = [
+        randomizedAnswers[randomizedAnswers.length - 1],
+        randomizedAnswers[randomIndex],
+      ]; // 배열 끝과 무작위 위치를 바꿔 정답 위치를 무작위로 만듦
+
+      // answers 상태를 설정
+      setAnswers(randomizedAnswers);
+    }
   }, [data, index]);
 
   return (
