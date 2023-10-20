@@ -1,7 +1,20 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import {
+  amountOptions,
+  categoryOptions,
+  difficultyOptions,
+  typeOptions,
+} from "../utils/dataOption";
+
+export type QuizType = {
+  amount: number;
+  category: string;
+  difficulty: string;
+  type: string;
+};
 
 const SetupForm = () => {
-  const [quiz, setQuiz] = useState({
+  const [quiz, setQuiz] = useState<QuizType>({
     amount: 1,
     category: "any",
     difficulty: "any",
@@ -28,15 +41,18 @@ const SetupForm = () => {
         {/* amount */}
         <div>
           <label htmlFor="amount">개수 : </label>
-          <input
-            type="number"
+          <select
             name="amount"
             id="amount"
             value={quiz.amount}
             onChange={handleChange}
-            min={1}
-            max={10}
-          />
+          >
+            {amountOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* category */}
@@ -48,11 +64,11 @@ const SetupForm = () => {
             value={quiz.category}
             onChange={handleChange}
           >
-            <option value="any">Any</option>
-            <option value="art">Art</option>
-            <option value="animals">Animals</option>
-            <option value="sports">Sports</option>
-            <option value="history">History</option>
+            {categoryOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -65,10 +81,11 @@ const SetupForm = () => {
             value={quiz.difficulty}
             onChange={handleChange}
           >
-            <option value="any">Any</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
+            {difficultyOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -81,9 +98,11 @@ const SetupForm = () => {
             value={quiz.type}
             onChange={handleChange}
           >
-            <option value="any">Any</option>
-            <option value="multiple">multiple choice</option>
-            <option value="boolean">true / false</option>
+            {typeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
 
