@@ -1,5 +1,5 @@
 import axios from "axios";
-import { QuizType } from "../components/SetupForm";
+import { QuizType } from "../pages/SetupForm";
 
 const BASE_URL = "https://opentdb.com/api.php";
 

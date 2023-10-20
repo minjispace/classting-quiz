@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import SetupForm from "./components/SetupForm";
-import Quiz from "./components/Quiz";
-import QuizResult from "./components/QuizResult";
+import SetupForm from "./pages/SetupForm";
+import Quiz from "./pages/Quiz";
+import QuizResult from "./pages/QuizResult";
 
 function App() {
   return (
