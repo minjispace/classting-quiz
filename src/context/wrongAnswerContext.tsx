@@ -8,6 +8,7 @@ type WrongAnswer = {
   date: number;
 };
 
+// WrongAnswerContext Type
 type WrongAnswerContextType = {
   addWrongAnswer: (
     question: string,
@@ -22,18 +23,18 @@ type WrongAnswerContextType = {
   }[];
 };
 
+// null or string 반환하는 wrongAnswer 정의
+const wrongAnswersFromLocalStorage = localStorage.getItem("wrongAnswers");
+const parsedWrongAnswers = wrongAnswersFromLocalStorage
+  ? JSON.parse(wrongAnswersFromLocalStorage)
+  : [];
+
 const WrongAnswerContext = createContext<WrongAnswerContextType | undefined>(
   undefined,
 );
 
 export function WrongAnswerProvider({ children }: { children: ReactNode }) {
-  // null or string 반환하는 wrongAnswer 정의
-  const wrongAnswersFromLocalStorage = localStorage.getItem("wrongAnswers");
-  const parsedWrongAnswers = wrongAnswersFromLocalStorage
-    ? JSON.parse(wrongAnswersFromLocalStorage)
-    : [];
-
-  // wrongAnwser state
+  // state
   const [wrongAnswers, setWrongAnswers] =
     useState<WrongAnswer[]>(parsedWrongAnswers);
 
@@ -73,6 +74,7 @@ export function WrongAnswerProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// custom hook
 export function useWrongAnswerContext() {
   const context = useContext(WrongAnswerContext);
 
