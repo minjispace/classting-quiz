@@ -58,9 +58,9 @@ const Quiz = () => {
 
     // 정답 여부에 따라 정답, 오답 갯수 업데이트
     if (correct_answer === checked.answer) {
-      updateAnswerCounts(true);
+      updateAnswerCounts(true, question, correct_answer, category);
     } else {
-      updateAnswerCounts(false);
+      updateAnswerCounts(false, question, correct_answer, category);
     }
 
     // index 하나씩 증가
@@ -90,6 +90,11 @@ const Quiz = () => {
       isOpen: false,
       content: "",
     });
+  };
+
+  // handleCheckAnswer
+  const handleCheckAnswer = () => {
+    openModal(correct_answer === checked.answer ? "정답입니다" : "오답입니다");
   };
 
   // quizTime setting
@@ -158,15 +163,7 @@ const Quiz = () => {
           </div>
         </article>
         {checked.state && (
-          <button
-            onClick={() =>
-              openModal(
-                correct_answer === checked.answer ? "정답입니다" : "오답입니다",
-              )
-            }
-          >
-            정답 확인
-          </button>
+          <button onClick={handleCheckAnswer}>정답 확인</button>
         )}
       </section>
     </main>

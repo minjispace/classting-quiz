@@ -1,11 +1,19 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
+// wrongAnswerList type
+type WrongAnswerListType = {
+  question: string;
+  correctAnswer: string;
+  category: string;
+};
+
 // Quiz result type
 type QuizResult = {
   startTime: number | null;
   correctAnswers: number;
   wrongAnswers: number;
   usedTime: number;
+  wrongAnswersList: WrongAnswerListType[];
 };
 
 // Quiz context type
@@ -13,7 +21,12 @@ type QuizContextType = {
   quizResult: QuizResult;
   startQuizTime: () => void;
   endQuizTime: () => void;
-  updateAnswerCounts: (isCorrect: boolean) => void;
+  updateAnswerCounts: (
+    isCorrect: boolean,
+    question: string,
+    correctAnswer: string,
+    category: string,
+  ) => void;
 };
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -24,6 +37,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     correctAnswers: 0,
     wrongAnswers: 0,
     usedTime: 0,
+    wrongAnswersList: [],
   });
 
   // 퀴즈 시작 시간 설정
@@ -33,6 +47,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       startTime: Date.now(),
       correctAnswers: 0,
       wrongAnswers: 0,
+      wrongAnswersList: [],
     });
   };
 
@@ -49,7 +64,12 @@ export function QuizProvider({ children }: { children: ReactNode }) {
   };
 
   // 정답 오답 개수 업데이트 함수
-  const updateAnswerCounts = (isCorrect: boolean) => {
+  const updateAnswerCounts = (
+    isCorrect: boolean,
+    question: string,
+    correctAnswer: string,
+    category: string,
+  ) => {
     if (isCorrect) {
       setQuizResult((prevQuizResult) => ({
         ...prevQuizResult,
@@ -59,6 +79,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
       setQuizResult((prevQuizResult) => ({
         ...prevQuizResult,
         wrongAnswers: prevQuizResult.wrongAnswers + 1,
+        wrongAnswersList: [
+          ...prevQuizResult.wrongAnswersList,
+          { question, correctAnswer, category, id: Date.now() },
+        ],
       }));
     }
   };
@@ -70,6 +94,7 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         startQuizTime,
         endQuizTime,
         updateAnswerCounts,
+        // addWrongAnswerList,
       }}
     >
       {children}
