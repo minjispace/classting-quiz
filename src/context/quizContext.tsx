@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 
-// 결과 정보를 담는 타입 정의
+// Quiz result type
 type QuizResult = {
   startTime: number | null;
   correctAnswers: number;
@@ -8,6 +8,7 @@ type QuizResult = {
   usedTime: number;
 };
 
+// Quiz context type
 type QuizContextType = {
   quizResult: QuizResult;
   startQuizTime: () => void;
@@ -47,24 +48,29 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 정답 오답 업데이트 함수
+  // 정답 오답 개수 업데이트 함수
   const updateAnswerCounts = (isCorrect: boolean) => {
     if (isCorrect) {
-      setQuizResult({
-        ...quizResult,
-        correctAnswers: quizResult.correctAnswers + 1, // 정답일 때 정답 갯수 증가
-      });
+      setQuizResult((prevQuizResult) => ({
+        ...prevQuizResult,
+        correctAnswers: prevQuizResult.correctAnswers + 1,
+      }));
     } else {
-      setQuizResult({
-        ...quizResult,
-        wrongAnswers: quizResult.wrongAnswers + 1, // 오답일 때 오답 갯수 증가
-      });
+      setQuizResult((prevQuizResult) => ({
+        ...prevQuizResult,
+        wrongAnswers: prevQuizResult.wrongAnswers + 1,
+      }));
     }
   };
 
   return (
     <QuizContext.Provider
-      value={{ quizResult, startQuizTime, endQuizTime, updateAnswerCounts }}
+      value={{
+        quizResult,
+        startQuizTime,
+        endQuizTime,
+        updateAnswerCounts,
+      }}
     >
       {children}
     </QuizContext.Provider>
