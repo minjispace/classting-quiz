@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import { QuizDataType, correctListType } from "../types/quiz.type";
+import { QuizDataType } from "../types/quiz.type";
 import Redirect from "../components/Redirect";
 import { useQuizContext } from "../context/quizContext";
 import { formatTime } from "../utils/formatTime";
-import { useWrongAnswerContext } from "../context/\bwrongAnswerContext";
+import Modal from "../components/Modal";
 
 const Quiz = () => {
   const navigate = useNavigate();
 
   // quizContext
   const { quizResult, endQuizTime, updateAnswerCounts } = useQuizContext();
-  const { addWrongAnswer } = useWrongAnswerContext();
 
   // state
   const [index, setIndex] = useState<number>(0);
-  const [isCorrect, setIsCorrect] =
-    useState<correctListType>("정답을 클릭 해주세요");
-  const [isNextOn, setIsNextOn] = useState(false);
   const [timer, setTimer] = useState<number>(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [clickedIndex, setClickedIndex] = useState(-1);
+  const [checked, setChecked] = useState({
+    state: false,
+    answer: "",
+    index: -1,
+  });
+  const [modal, setModal] = useState({
+    isOpen: false,
+    content: "",
+  });
 
   // get quiz cached data from react-query
   const cache = useQueryClient();
@@ -34,22 +38,14 @@ const Quiz = () => {
 
   const { question, incorrect_answers, correct_answer, category } = data[index];
 
-  // checkAnswer
-  const checkAnswer = (answer: string, index: number) => {
-    // 이미 클릭한 버튼은 무시
-    if (clickedIndex === index) {
-      return;
-    }
-
-    // 클릭한 버튼의 인덱스 업데이트
-    setClickedIndex(index);
-
-    if (correct_answer === answer) {
-      setIsCorrect("정답입니다");
-    } else {
-      setIsCorrect("오답입니다");
-    }
-    setIsNextOn(true);
+  // checked answer
+  const checkedAnswer = (answer: string, index: number) => {
+    setChecked((prevState) => ({
+      ...prevState,
+      state: true,
+      answer,
+      index,
+    }));
   };
 
   // nextQuestion
@@ -57,25 +53,43 @@ const Quiz = () => {
     // 문제가 끝나면 시간종료 & result 창으로
     if (index === data.length - 1) {
       navigate("/result");
-      setClickedIndex(-1);
       endQuizTime();
     }
 
     // 정답 여부에 따라 정답, 오답 갯수 업데이트
-    if (isCorrect === "정답입니다") {
+    if (correct_answer === checked.answer) {
       updateAnswerCounts(true);
-    } else if (isCorrect === "오답입니다") {
+    } else {
       updateAnswerCounts(false);
-      addWrongAnswer(question, correct_answer, category);
     }
 
     // index 하나씩 증가
     setIndex((oldIndex) => {
       return oldIndex + 1;
     });
-    setIsNextOn(false);
-    setClickedIndex(-1);
-    setIsCorrect("정답을 클릭 해주세요");
+    setChecked((prevState) => ({
+      ...prevState,
+      state: false,
+      answer: "",
+      index: -1,
+    }));
+    closeModal();
+  };
+
+  // open modal
+  const openModal = (content: string) => {
+    setModal({
+      isOpen: true,
+      content: content,
+    });
+  };
+
+  // closeModal
+  const closeModal = () => {
+    setModal({
+      isOpen: false,
+      content: "",
+    });
   };
 
   // quizTime setting
@@ -115,6 +129,13 @@ const Quiz = () => {
 
   return (
     <main>
+      {modal.isOpen && (
+        <Modal
+          isOpen={modal.isOpen}
+          content={modal.content}
+          onNext={nextQuestion}
+        />
+      )}
       <section>
         <h2>시간 : {formatTime(timer)}</h2>
         <h3>문제 {index + 1}번</h3>
@@ -127,17 +148,26 @@ const Quiz = () => {
                 <button
                   key={index}
                   style={{
-                    backgroundColor: clickedIndex === index ? "grey" : "",
+                    backgroundColor: checked.index === index ? "grey" : "",
                   }}
-                  onClick={() => checkAnswer(answer, index)}
+                  onClick={() => checkedAnswer(answer, index)}
                   dangerouslySetInnerHTML={{ __html: answer }}
                 />
               );
             })}
           </div>
         </article>
-        <div>{isCorrect}</div>
-        {isNextOn && <button onClick={nextQuestion}>next question</button>}
+        {checked.state && (
+          <button
+            onClick={() =>
+              openModal(
+                correct_answer === checked.answer ? "정답입니다" : "오답입니다",
+              )
+            }
+          >
+            정답 확인
+          </button>
+        )}
       </section>
     </main>
   );
