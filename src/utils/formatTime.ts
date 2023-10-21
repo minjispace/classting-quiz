@@ -5,3 +5,7 @@ export const formatTime = (milliseconds: number) => {
   const remainingSeconds = seconds % 60;
   return `${minutes}분${remainingSeconds}초`;
 };
+
+export function convertTimestampToDate(timestamp: number) {
+  return new Date(timestamp).toLocaleDateString();
+}
