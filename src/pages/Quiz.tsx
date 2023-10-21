@@ -5,12 +5,14 @@ import { QuizDataType, correctListType } from "../types/quiz.type";
 import Redirect from "../components/Redirect";
 import { useQuizContext } from "../context/quizContext";
 import { formatTime } from "../utils/formatTime";
+import { useWrongAnswerContext } from "../context/\bwrongAnswerContext";
 
 const Quiz = () => {
   const navigate = useNavigate();
 
   // quizContext
   const { quizResult, endQuizTime, updateAnswerCounts } = useQuizContext();
+  const { addWrongAnswer } = useWrongAnswerContext();
 
   // state
   const [index, setIndex] = useState<number>(0);
@@ -64,6 +66,7 @@ const Quiz = () => {
       updateAnswerCounts(true);
     } else if (isCorrect === "오답입니다") {
       updateAnswerCounts(false);
+      addWrongAnswer(question, correct_answer, category);
     }
 
     // index 하나씩 증가
