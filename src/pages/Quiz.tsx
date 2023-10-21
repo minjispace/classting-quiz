@@ -19,6 +19,7 @@ const Quiz = () => {
   const [isNextOn, setIsNextOn] = useState(false);
   const [timer, setTimer] = useState<number>(0);
   const [answers, setAnswers] = useState<string[]>([]);
+  const [clickedIndex, setClickedIndex] = useState(-1);
 
   // get quiz cached data from react-query
   const cache = useQueryClient();
@@ -32,7 +33,15 @@ const Quiz = () => {
   const { question, incorrect_answers, correct_answer, category } = data[index];
 
   // checkAnswer
-  const checkAnswer = (answer: string) => {
+  const checkAnswer = (answer: string, index: number) => {
+    // 이미 클릭한 버튼은 무시
+    if (clickedIndex === index) {
+      return;
+    }
+
+    // 클릭한 버튼의 인덱스 업데이트
+    setClickedIndex(index);
+
     if (correct_answer === answer) {
       setIsCorrect("정답입니다");
     } else {
@@ -46,6 +55,7 @@ const Quiz = () => {
     // 문제가 끝나면 시간종료 & result 창으로
     if (index === data.length - 1) {
       navigate("/result");
+      setClickedIndex(-1);
       endQuizTime();
     }
 
@@ -61,6 +71,7 @@ const Quiz = () => {
       return oldIndex + 1;
     });
     setIsNextOn(false);
+    setClickedIndex(-1);
     setIsCorrect("정답을 클릭 해주세요");
   };
 
@@ -112,7 +123,10 @@ const Quiz = () => {
               return (
                 <button
                   key={index}
-                  onClick={() => checkAnswer(answer)}
+                  style={{
+                    backgroundColor: clickedIndex === index ? "grey" : "",
+                  }}
+                  onClick={() => checkAnswer(answer, index)}
                   dangerouslySetInnerHTML={{ __html: answer }}
                 />
               );
