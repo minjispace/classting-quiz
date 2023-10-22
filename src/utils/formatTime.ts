@@ -7,5 +7,5 @@ export const formatTime = (milliseconds: number) => {
 };
 
 export function convertTimestampToDate(timestamp: number) {
-  return new Date(timestamp).toLocaleDateString();
+  return new Date(timestamp).toLocaleString();
 }
