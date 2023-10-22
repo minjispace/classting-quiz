@@ -35,10 +35,6 @@ const difficultyOptions = [
   { value: "hard", label: "Hard" },
 ];
 
-const typeOptions = [
-  { value: "any", label: "Any Type" },
-  { value: "multiple", label: "Multiple Choice" },
-  { value: "boolean", label: "True / False" },
-];
+const typeOptions = [{ value: "multiple", label: "Multiple Choice" }];
 
 export { amountOptions, categoryOptions, difficultyOptions, typeOptions };

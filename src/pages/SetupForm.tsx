@@ -27,7 +27,7 @@ const SetupForm = () => {
     amount: 1,
     category: "any",
     difficulty: "any",
-    type: "any",
+    type: "multiple",
   });
 
   // SetupForm 컴포넌트 내에서 사용
