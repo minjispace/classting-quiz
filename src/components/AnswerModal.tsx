@@ -2,9 +2,10 @@ type ModalType = {
   isOpen: boolean;
   content: string;
   onNext: () => void;
+  isLastQuiz: boolean;
 };
 
-const Modal = ({ isOpen, content, onNext }: ModalType) => {
+const AnswerModal = ({ isOpen, content, onNext, isLastQuiz }: ModalType) => {
   if (!isOpen) {
     return null;
   }
@@ -23,11 +24,11 @@ const Modal = ({ isOpen, content, onNext }: ModalType) => {
       <div className="modal-content">
         <div>내용 : {content}</div>
         <button className="close-button" onClick={onNext}>
-          다음 문제
+          {isLastQuiz ? "결과 보기" : "다음 문제"}
         </button>
       </div>
     </div>
   );
 };
 
-export default Modal;
+export default AnswerModal;

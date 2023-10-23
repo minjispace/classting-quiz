@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const Redirect = () => {
+const RedirectHome = () => {
   return (
     <>
       <div>퀴즈가 종료 되었습니다. </div>
@@ -9,4 +9,4 @@ const Redirect = () => {
   );
 };
 
-export default Redirect;
+export default RedirectHome;
