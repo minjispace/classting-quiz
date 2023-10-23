@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./App.css";
 import SetupForm from "./pages/SetupForm";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
