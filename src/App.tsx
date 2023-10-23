@@ -1,10 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import SetupForm from "./pages/SetupForm";
-import Quiz from "./pages/Quiz";
-import Result from "./pages/Result";
-import FeedbackNote from "./pages/FeedbackNote";
-import SingleFeedback from "./pages/SingleFeedback";
-import Navbar from "./components/Navbar";
+import { FeedbackNote, Quiz, Result, SetupForm, SingleFeedback } from "./pages";
+import { Navbar } from "./components";
 
 function App() {
   return (
