@@ -1,170 +1,253 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import { QuizDataType } from "../types/quiz.type";
-import Redirect from "../components/Redirect";
+import { QuizDataType, WrongAnswerListType } from "../types/quiz.type";
+import RedirectHome from "../components/RedirectHome";
 import { useQuizContext } from "../context/quizContext";
-import { formatTime } from "../utils/formatTime";
-import Modal from "../components/Modal";
+import AnswerModal from "../components/AnswerModal";
+import Timer from "../components/Timer";
+import { generateUniqueId } from "../utils/uniqueId";
+
+type QuizProgressInfoType = {
+  correctAnswers: number;
+  wrongAnswers: number;
+  wrongAnswersList: WrongAnswerListType[];
+};
 
 const Quiz = () => {
   const navigate = useNavigate();
+  const { quizStartTime, quizInfo } = useQuizContext();
 
-  // quizContext
-  const { quizResult, endQuizTime, updateAnswerCounts } = useQuizContext();
+  // 현재 풀고 있는 문제 번호 state
+  const [currentQuizIndex, setCurrentQuizIndex] = useState<number>(0);
 
-  // state
-  const [index, setIndex] = useState<number>(0);
-  const [timer, setTimer] = useState<number>(0);
-  const [answers, setAnswers] = useState<string[]>([]);
-  const [checked, setChecked] = useState({
+  // quiz progress 정보 state
+  const [quizProgressInfo, setQuizProgressInfo] =
+    useState<QuizProgressInfoType>({
+      correctAnswers: 0,
+      wrongAnswers: 0,
+      wrongAnswersList: [],
+    });
+
+  // 답 체크한 state
+  const [answerSelected, setAnswerSelected] = useState({
     state: false,
     answer: "",
     index: -1,
   });
-  const [modal, setModal] = useState({
+
+  // answer check modal state
+  const [isAnswerCheckModal, setIsAnswerCheckModal] = useState({
     isOpen: false,
     content: "",
   });
 
-  // get quiz cached data from react-query
+  // 4지선다 answerList (오답 3개, 정답 1개)
+  const [answersList, setAnswersList] = useState<string[]>([]);
+
+  // get quiz cached data from react-query ----------------------------------------
   const cache = useQueryClient();
   const data = cache.getQueryData(["quizData"]) as QuizDataType[];
 
   // quiz 푸는 중간에 페이지가 새로고침되면 다시 홈으로
   if (!data) {
-    return <Redirect />;
+    return <RedirectHome />;
   }
 
-  const { question, incorrect_answers, correct_answer, category } = data[index];
+  // 현재문제 destructuring
+  const { question, incorrect_answers, correct_answer, category } =
+    data[currentQuizIndex];
 
-  // checked answer
-  const checkedAnswer = (answer: string, index: number) => {
-    setChecked((prevState) => ({
-      ...prevState,
+  // 내가 선택한 정답 상태 셋팅
+  const updateSelectedAnswerState = (answer: string, index: number) => {
+    setAnswerSelected({
       state: true,
       answer,
       index,
-    }));
+    });
   };
 
-  // nextQuestion
-  const nextQuestion = () => {
-    // 문제가 끝나면 시간종료 & result 창으로
-    if (index === data.length - 1) {
-      navigate("/result");
-      endQuizTime();
-    }
+  // set wrongAnswerList in localStorage -------------------------
+  const setWrongAnswerLocalStroage = () => {
+    // newWrongResultList define
+    const newWrongResultList = {
+      category: quizInfo.category,
+      startTime: quizStartTime,
+      endTime: Date.now(),
+      correct: quizProgressInfo.correctAnswers,
+      wrong: quizProgressInfo.wrongAnswers,
+      wrongResult: quizProgressInfo.wrongAnswersList,
+    };
 
-    // 정답 여부에 따라 정답, 오답 갯수 업데이트
-    if (correct_answer === checked.answer) {
-      updateAnswerCounts(true, question, correct_answer, category);
-    } else {
-      updateAnswerCounts(false, question, correct_answer, category);
-    }
+    // localStorage에 저장
+    const existingDataJSON = localStorage.getItem("quizResults");
+    let existingData = existingDataJSON ? JSON.parse(existingDataJSON) : [];
 
-    // index 하나씩 증가
-    setIndex((oldIndex) => {
+    existingData.push(newWrongResultList);
+    localStorage.setItem("quizResults", JSON.stringify(existingData));
+  };
+
+  // index 하나씩 증가해서 다음 문제로 넘기는 함수
+  const passToNextQuestion = () => {
+    setCurrentQuizIndex((oldIndex) => {
       return oldIndex + 1;
     });
-    setChecked((prevState) => ({
+  };
+
+  // answer선택 초기화 작업
+  const initializeSetAnswerState = () => {
+    setAnswerSelected((prevState) => ({
       ...prevState,
       state: false,
       answer: "",
       index: -1,
     }));
+  };
+
+  // nextQuestion
+  const nextQuestion = () => {
+    /**
+     * 마지막 문제가 종료되면,
+     * 오답문제 localstorage에 저장하고,
+     * result pages로 보내기
+     */
+    if (currentQuizIndex === data.length - 1) {
+      setWrongAnswerLocalStroage();
+      navigate("/result");
+      return;
+    }
+
+    /**
+     * 마지막 문제가 아니면
+     * 다음 문제로 넘기고
+     * 상태들 초기화 작업
+     * 모달 닫기
+     */
+    passToNextQuestion();
+    initializeSetAnswerState();
     closeModal();
   };
 
-  // open modal
-  const openModal = (content: string) => {
-    setModal({
+  // 정답 수 올리기 -------------------------------------------------------
+  const increaseCorrectAnswers = () => {
+    setQuizProgressInfo((prev) => {
+      return {
+        ...prev,
+        correctAnswers: prev.correctAnswers + 1,
+      };
+    });
+  };
+
+  // 오답수 올리기 & 오답리스트에 넣기
+  const increaseWrongAnswers = () => {
+    setQuizProgressInfo((prev) => {
+      return {
+        ...prev,
+        wrongAnswers: prev.wrongAnswers + 1,
+        wrongAnswersList: [
+          ...prev.wrongAnswersList,
+          {
+            category,
+            correctAnswer: correct_answer,
+            question,
+            id: generateUniqueId(),
+          },
+        ],
+      };
+    });
+  };
+
+  // 정답 여부에 따라 정답, 오답 갯수 업데이트
+  const handleQuizAnswerCount = () => {
+    // 정답일 때 정답 수 올리기
+    if (correct_answer === answerSelected.answer) {
+      increaseCorrectAnswers();
+
+      // 오답일 떄, 오답 수 올리기
+    } else {
+      increaseWrongAnswers();
+    }
+  };
+
+  // open modal -------------------------------------------------------
+  const openModal = () => {
+    handleQuizAnswerCount();
+    setIsAnswerCheckModal({
       isOpen: true,
-      content: content,
+      content:
+        correct_answer === answerSelected.answer ? "정답입니다" : "오답입니다",
     });
   };
 
   // closeModal
   const closeModal = () => {
-    setModal({
+    setIsAnswerCheckModal({
       isOpen: false,
       content: "",
     });
   };
 
-  // handleCheckAnswer
-  const handleCheckAnswer = () => {
-    openModal(correct_answer === checked.answer ? "정답입니다" : "오답입니다");
-  };
-
-  // quizTime setting
+  // 문제 바뀔 때마다 4지선다 섞기 작업
   useEffect(() => {
-    if (quizResult.startTime !== null) {
-      const interval = setInterval(() => {
-        const now = Date.now();
+    if (!data) return;
 
-        const elapsed = quizResult.startTime ? now - quizResult.startTime : 0;
-        setTimer(elapsed);
-      }, 1000); // 1초마다 업데이트 (1000ms)
+    const randomizedAnswers = [...incorrect_answers, correct_answer];
+    const randomIndex = Math.floor(Math.random() * randomizedAnswers.length);
 
-      // 컴포넌트 언마운트 시 clearInterval 호출
-      return () => clearInterval(interval);
-    }
-  }, [quizResult.startTime]);
+    // 배열의 요소 위치 바꾸기
+    [
+      randomizedAnswers[randomIndex],
+      randomizedAnswers[randomizedAnswers.length - 1],
+    ] = [
+      randomizedAnswers[randomizedAnswers.length - 1],
+      randomizedAnswers[randomIndex],
+    ];
 
-  // 문제를 불러올 때만 섞기
-  useEffect(() => {
-    if (data) {
-      const randomizedAnswers = [...incorrect_answers, correct_answer];
-
-      // 문제의 정답 위치를 무작위로 바꿈
-      const randomIndex = Math.floor(Math.random() * randomizedAnswers.length);
-      [
-        randomizedAnswers[randomIndex],
-        randomizedAnswers[randomizedAnswers.length - 1],
-      ] = [
-        randomizedAnswers[randomizedAnswers.length - 1],
-        randomizedAnswers[randomIndex],
-      ]; // 배열 끝과 무작위 위치를 바꿔 정답 위치를 무작위로 만듦
-
-      // answers 상태를 설정
-      setAnswers(randomizedAnswers);
-    }
-  }, [data, index]);
+    setAnswersList(randomizedAnswers);
+  }, [data, currentQuizIndex]);
 
   return (
     <main>
-      {modal.isOpen && (
-        <Modal
-          isOpen={modal.isOpen}
-          content={modal.content}
+      {isAnswerCheckModal.isOpen && (
+        <AnswerModal
+          isOpen={isAnswerCheckModal.isOpen}
+          content={isAnswerCheckModal.content}
           onNext={nextQuestion}
+          isLastQuiz={currentQuizIndex === data.length - 1}
         />
       )}
       <section>
-        <h2>시간 : {formatTime(timer)}</h2>
-        <h3>문제 {index + 1}번</h3>
+        <Timer />
+        <hr />
+
+        <h4>총 문제 수 : {quizInfo.amount}</h4>
+        <h5>문제 난이도 : {quizInfo.difficulty}</h5>
+        <h5>문제 전체 카테고리 : {quizInfo.category}</h5>
+        <hr />
+
         <h3>문제 카테고리 : {category}</h3>
+        <h3>문제 {currentQuizIndex + 1}번</h3>
+        <hr />
+
         <article>
           <h2 dangerouslySetInnerHTML={{ __html: question }} />
           <div>
-            {answers.map((answer, index) => {
+            {answersList.map((answer, index) => {
               return (
                 <button
                   key={index}
                   style={{
-                    backgroundColor: checked.index === index ? "grey" : "",
+                    backgroundColor:
+                      answerSelected.index === index ? "grey" : "",
                   }}
-                  onClick={() => checkedAnswer(answer, index)}
+                  onClick={() => updateSelectedAnswerState(answer, index)}
                   dangerouslySetInnerHTML={{ __html: answer }}
                 />
               );
             })}
           </div>
         </article>
-        {checked.state && (
-          <button onClick={handleCheckAnswer}>정답 확인</button>
-        )}
+        {answerSelected.state && <button onClick={openModal}>정답 확인</button>}
       </section>
     </main>
   );
