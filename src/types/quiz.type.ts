@@ -13,7 +13,6 @@ export type QuizInfoType = {
   amount: number;
   category: string;
   difficulty: string;
-  type: string;
 };
 
 // wrongAnswerList type
