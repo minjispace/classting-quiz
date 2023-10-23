@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import { QuizInfoType } from "../pages/SetupForm";
+import { QuizInfoType } from "../types/quiz.type";
 
 // Quiz context type
 type QuizContextType = {

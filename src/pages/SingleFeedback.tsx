@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import QuizMemo from "../components/QuizMemo";
-import RedirectHome from "../components/RedirectHome";
-import { getDataFromLocalStorage } from "../utils/localStorage.quizResult";
+import { getDataFromLocalStorage } from "../utils";
+import { QuizMemo, RedirectHome } from "../components";
 
 const SingleFeedback = () => {
   // get feedback ID

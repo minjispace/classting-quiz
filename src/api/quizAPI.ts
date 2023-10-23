@@ -1,9 +1,9 @@
 import axios from "axios";
-import { QuizType } from "../pages/SetupForm";
+import { QuizInfoType } from "../types/quiz.type";
 
 const BASE_URL = "https://opentdb.com/api.php";
 
-const getQuizData = async (quiz: QuizType) => {
+const getQuizData = async (quiz: QuizInfoType) => {
   const { amount, category, difficulty, type } = quiz;
 
   const params: Record<string, any> = {

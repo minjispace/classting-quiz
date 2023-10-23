@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { QuizDataType, WrongAnswerListType } from "../types/quiz.type";
-import RedirectHome from "../components/RedirectHome";
 import { useQuizContext } from "../context/quizContext";
-import AnswerModal from "../components/AnswerModal";
-import Timer from "../components/Timer";
-import { generateUniqueId } from "../utils/uniqueId";
+import { generateUniqueId } from "../utils";
+import { AnswerModal, RedirectHome, Timer } from "../components";
 
 type QuizProgressInfoType = {
   correctAnswers: number;

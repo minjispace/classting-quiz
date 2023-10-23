@@ -1,22 +1,16 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { useQuery } from "react-query";
+import { getQuizData } from "../api/quizAPI";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuizContext } from "../context/quizContext";
+import { QuizInfoType } from "../types/quiz.type";
+import { Loading } from "../components";
 import {
   amountOptions,
   categoryOptions,
   difficultyOptions,
   typeOptions,
-} from "../utils/dataOption";
-import { useQuery } from "react-query";
-import { getQuizData } from "../api/quizAPI";
-import Loading from "../components/Loading";
-import { Link, useNavigate } from "react-router-dom";
-import { useQuizContext } from "../context/quizContext";
-
-export type QuizInfoType = {
-  amount: number;
-  category: string;
-  difficulty: string;
-  type: string;
-};
+} from "../utils";
 
 const SetupForm = () => {
   const { startQuiz } = useQuizContext();

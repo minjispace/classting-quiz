@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import {
   getAllDataFromLocalStorage,
   getSingleDataFromLocalStorage,
-} from "../utils/localStorage.singleMemo";
+} from "../utils";
 
 type QuizMemoProps = {
   category: string;

@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQuizContext } from "../context/quizContext";
-import { formatTime } from "../utils/formatTime";
-import RedirectHome from "../components/RedirectHome";
-import ResultChart from "../components/ResultChart";
-import { getDataFromLocalStorage } from "../utils/localStorage.quizResult";
+import { getDataFromLocalStorage, formatTime } from "../utils";
+import { RedirectHome, ResultChart } from "../components";
 
 const Result = () => {
   const { quizStartTime } = useQuizContext();

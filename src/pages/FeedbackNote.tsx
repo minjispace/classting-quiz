@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { convertTimestampToDate } from "../utils/formatTime";
-import { getDataFromLocalStorage } from "../utils/localStorage.quizResult";
+import { convertTimestampToDate, getDataFromLocalStorage } from "../utils";
 
 const FeedbackNote = () => {
   // 로컬 스토리지에서 데이터를 가져오기
