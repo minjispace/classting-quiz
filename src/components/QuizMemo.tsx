@@ -77,23 +77,27 @@ const QuizMemo: FC<QuizMemoProps> = ({
   };
 
   return (
-    <div>
-      <div key={question}>
-        <div>
-          <div>카테고리 : {category}</div>
-          <div>문제 : {question}</div>
-          <div>답 : {correctAnswer}</div>
+    <div className="border border-gray-300 rounded-md p-4 mb-4">
+      <div className="mb-4">
+        <div className="font-semibold text-lg pb-2">
+          해당 문제 카테고리: {category}
         </div>
+        <div className="text-xl font-bold pb-2">문제 : {question}</div>
+        <div className="text-lg text-green font-bold">답 : {correctAnswer}</div>
       </div>
-      <br />
-
+      {/* 메모 textarea */}
       <textarea
-        placeholder="Write your memo here..."
+        className="border border-gray-300 rounded-md p-2 w-full h-32"
+        placeholder="메모를 입력하세요"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button onClick={handleAddMemo}>Add Memo</button>
-      <hr />
+      <button
+        className="bg-green hover:opacity-80 text-white font-semibold rounded-md px-4 py-2 mt-2"
+        onClick={handleAddMemo}
+      >
+        메모하기
+      </button>
     </div>
   );
 };

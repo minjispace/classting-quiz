@@ -17,36 +17,41 @@ const Result = () => {
   }
 
   return (
-    <main>
-      {/* quiz result description */}
-      <h1>결과</h1>
-      <p>
-        퀴즈를 마칠 때까지 소요된 시간:{" "}
-        {formatTime(data.endTime - data.startTime)}
-      </p>
-      <p>정답 개수: {data.correct}</p>
-      <p>오답 수: {data.wrong}</p>
-      <div>총 문제수 {data.correct + data.wrong}</div>
-      <p>
-        정답 비율:{" "}
-        {((data.correct / (data.correct + data.wrong)) * 100).toFixed(2)}%
-      </p>
+    <main className="flex flex-col items-center justify-center">
+      <div className="text-4xl font-bold p-4 rounded-lg mt-10">퀴즈 결과</div>
 
-      {/* chart */}
-      <ResultChart correctAnswers={data.correct} wrongAnswers={data.wrong} />
+      {/* Description and Chart */}
+      <div className="flex justify-around items-center m-4">
+        <div className="bg-white rounded-lg p-8 shadow-md mr-10 min-w-fit">
+          <p>소요 시간 : {formatTime(data.endTime - data.startTime)}</p>
+          <p>정답 개수 : {data.correct}개</p>
+          <p>오답 수 : {data.wrong}개</p>
+          <div>총 문제 수 : {data.correct + data.wrong}개</div>
+          <p>
+            정답 비율 :{" "}
+            {((data.correct / (data.correct + data.wrong)) * 100).toFixed(2)}%
+          </p>
+        </div>
 
-      {/* feedback note button */}
+        <ResultChart correctAnswers={data.correct} wrongAnswers={data.wrong} />
+      </div>
+
+      {/* Feedback Note Button */}
       {data?.wrongResult?.length === 0 ? (
-        <div>만점입니다. 축하합니다!!</div>
+        <div className="text-2xl text-green mt-4">만점입니다. 축하합니다!!</div>
       ) : (
         <Link to={`/feed-back/${data.startTime}`}>
-          <button>오답노트</button>
+          <button className="bg-red-500 hover:opacity-80 text-white font-semibold rounded-lg px-4 py-2.5 mt-4">
+            오답 노트 보기
+          </button>
         </Link>
       )}
 
-      {/* home button */}
+      {/* Home Button */}
       <Link to="/">
-        <button>다른 문제 풀러가기</button>
+        <button className="bg-green hover:opacity-80 transition-all text-white font-semibold rounded-lg px-4 py-2.5 mt-4">
+          다른 문제 풀러가기
+        </button>
       </Link>
     </main>
   );

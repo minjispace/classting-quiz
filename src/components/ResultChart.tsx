@@ -40,7 +40,7 @@ const ResultChart: React.FC<ResultChartProps> = ({
         text: "퀴즈 결과 정오답 비율",
       },
     },
-
+    aspectRatio: 1,
     scales: {
       y: {
         beginAtZero: true,
@@ -67,12 +67,8 @@ const ResultChart: React.FC<ResultChartProps> = ({
     ],
   };
   return (
-    <div className="h-40">
-      <Bar
-        style={{ height: "300px", width: "100%" }}
-        options={options}
-        data={data}
-      />
+    <div>
+      <Bar options={options} data={data} />
     </div>
   );
 };

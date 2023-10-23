@@ -6,30 +6,33 @@ const FeedbackNote = () => {
   const wrongAnswerData = getDataFromLocalStorage();
 
   return (
-    <div>
-      <h2>오답노트</h2>
-      {!wrongAnswerData && <div>현재 정리된 오답 노트가 없습니다.</div>}
+    <div className="text-center mt-10">
+      <h2 className="text-4xl font-bold mb-10">오답 노트</h2>
+      {!wrongAnswerData && (
+        <div className="text-2xl">현재 정리된 오답 노트가 없습니다.</div>
+      )}
 
       {wrongAnswerData?.map((item) => {
         const { endTime, wrongResult, startTime, wrong } = item;
 
         // 오답노트 리스트가 없다면 return
-        if (wrongResult.length === 0 || wrong === 0) return;
+        if (wrongResult.length === 0 || wrong === 0) return null;
 
         return (
-          <>
-            <Link key={endTime} to={`/feed-back/${startTime}`}>
-              <div>
-                <button>
-                  {convertTimestampToDate(endTime)} 오답 노트 보러가기
-                </button>
-              </div>
+          <div key={endTime} className="mb-4">
+            <Link to={`/feed-back/${startTime}`}>
+              <button className="hover:opacity-50 transition-opacity shadow-lg font-semibold rounded-lg px-4 py-2.5">
+                {convertTimestampToDate(endTime)} 종료된 <br /> 오답 노트
+                보러가기
+              </button>
             </Link>
-          </>
+          </div>
         );
       })}
       <Link to="/">
-        <button>다른 문제 풀러가기</button>
+        <button className="bg-green hover:opacity-80 text-white font-semibold rounded-lg px-4 py-2.5 mt-4">
+          다른 문제 풀러가기
+        </button>
       </Link>
     </div>
   );

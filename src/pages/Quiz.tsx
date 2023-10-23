@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { QuizDataType, WrongAnswerListType } from "../types/quiz.type";
 import { useQuizContext } from "../context/quizContext";
-import { generateUniqueId } from "../utils";
+import { categoryOptions, generateUniqueId } from "../utils";
 import { AnswerModal, RedirectHome, Timer } from "../components";
 
 type QuizProgressInfoType = {
@@ -205,7 +205,7 @@ const Quiz = () => {
   }, [data, currentQuizIndex]);
 
   return (
-    <main>
+    <main className="flex flex-col items-center justify-center">
       {isAnswerCheckModal.isOpen && (
         <AnswerModal
           isOpen={isAnswerCheckModal.isOpen}
@@ -214,38 +214,73 @@ const Quiz = () => {
           isLastQuiz={currentQuizIndex === data.length - 1}
         />
       )}
-      <section>
-        <Timer />
-        <hr />
 
-        <h4>총 문제 수 : {quizInfo.amount}</h4>
-        <h5>문제 난이도 : {quizInfo.difficulty}</h5>
-        <h5>문제 전체 카테고리 : {quizInfo.category}</h5>
-        <hr />
-
-        <h3>문제 카테고리 : {category}</h3>
-        <h3>문제 {currentQuizIndex + 1}번</h3>
-        <hr />
-
-        <article>
-          <h2 dangerouslySetInnerHTML={{ __html: question }} />
+      {/* 타이머, 문제 수, 난이도, 전체 카테고리 */}
+      <div className="mt-10 flex justify-between w-full max-w-lg">
+        <div className="text-center">
+          <Timer />
+        </div>
+        <div className=" text-white mb-6 bg-green p-2 rounded-lg">
           <div>
-            {answersList.map((answer, index) => {
-              return (
-                <button
-                  key={index}
-                  style={{
-                    backgroundColor:
-                      answerSelected.index === index ? "grey" : "",
-                  }}
-                  onClick={() => updateSelectedAnswerState(answer, index)}
-                  dangerouslySetInnerHTML={{ __html: answer }}
-                />
-              );
-            })}
+            총 문제 수 :{" "}
+            <span className="text-bold text-xl">{quizInfo.amount}</span>
+          </div>
+          <div>
+            난이도 :{" "}
+            <span className="text-bold text-xl">{quizInfo.difficulty}</span>
+          </div>
+          <div>
+            전체 카테고리 :{" "}
+            <span className="text-bold text-xl">
+              {" "}
+              {
+                categoryOptions.find(
+                  (option) => option.value === quizInfo.category,
+                )?.label
+              }
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 문제 카드 */}
+      <section className="max-w-lg p-8 bg-white border rounded-lg shadow-lg">
+        <div className="text-center mb-4">
+          <div className="text-lg mb-4">현재 문제 카테고리 : {category}</div>
+        </div>
+
+        <article className="mb-4">
+          <div className="text-2xl font-bold text-center mb-2">
+            문제 {currentQuizIndex + 1}. {question}
+          </div>
+
+          {/* 4지선다 답들 */}
+          <div className="flex flex-col space-y-4">
+            {answersList.map((answer, index) => (
+              <button
+                key={index}
+                className={`px-4 py-2 border rounded-lg flex ${
+                  answerSelected.index === index
+                    ? "bg-green text-white"
+                    : "hover:bg-slate-100 transition-all"
+                }`}
+                onClick={() => updateSelectedAnswerState(answer, index)}
+              >
+                <span className="text-left">{index + 1}.</span>
+                <span className="ml-2"> {answer}</span>
+              </button>
+            ))}
           </div>
         </article>
-        {answerSelected.state && <button onClick={openModal}>정답 확인</button>}
+
+        {answerSelected.state && (
+          <button
+            onClick={openModal}
+            className="mt-8 text-white  bg-green hover:opacity-70 transition-all font-medium rounded-lg text-lg px-5 py-2.5"
+          >
+            정답 확인
+          </button>
+        )}
       </section>
     </main>
   );

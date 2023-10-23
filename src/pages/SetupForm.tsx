@@ -1,16 +1,11 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useQuery } from "react-query";
 import { getQuizData } from "../api/quizAPI";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useQuizContext } from "../context/quizContext";
 import { QuizInfoType } from "../types/quiz.type";
 import { Loading } from "../components";
-import {
-  amountOptions,
-  categoryOptions,
-  difficultyOptions,
-  typeOptions,
-} from "../utils";
+import { amountOptions, categoryOptions, difficultyOptions } from "../utils";
 
 const SetupForm = () => {
   const { startQuiz } = useQuizContext();
@@ -18,10 +13,9 @@ const SetupForm = () => {
 
   // state define
   const [quiz, setQuiz] = useState<QuizInfoType>({
-    amount: 1,
+    amount: 3,
     category: "any",
     difficulty: "any",
-    type: "multiple",
   });
 
   // SetupForm 컴포넌트 내에서 사용
@@ -52,21 +46,26 @@ const SetupForm = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <section>
-      <Link to="/feed-back">
-        <button>모든 오답노트 보기</button>
-      </Link>
-      <form>
-        <h2>퀴즈 풀기 셋팅</h2>
+    <section className="flex justify-center items-center text-center">
+      <form className="max-w-md">
+        <div className="font-bold text-4xl mt-28 text-center">
+          클래스밍 퀴즈 세팅{" "}
+        </div>
 
         {/* amount */}
-        <div>
-          <label htmlFor="amount">개수 : </label>
+        <div className="flex items-center mt-10">
+          <label
+            htmlFor="amount"
+            className="block mb-2 text-lg font-medium mr-2 w-32"
+          >
+            문제수 :
+          </label>
           <select
             name="amount"
             id="amount"
             value={quiz.amount}
             onChange={handleChange}
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
           >
             {amountOptions.map((option) => (
               <option key={option} value={option}>
@@ -77,13 +76,19 @@ const SetupForm = () => {
         </div>
 
         {/* category */}
-        <div>
-          <label htmlFor="category">카테고리 : </label>
+        <div className="flex items-center mt-5">
+          <label
+            htmlFor="category"
+            className="block mb-2 text-lg font-medium mr-2 w-32"
+          >
+            카테고리 :
+          </label>
           <select
             name="category"
             id="category"
             value={quiz.category}
             onChange={handleChange}
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
           >
             {categoryOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -94,13 +99,19 @@ const SetupForm = () => {
         </div>
 
         {/* difficulty */}
-        <div>
-          <label htmlFor="difficulty">난이도 : </label>
+        <div className="flex items-center mt-5">
+          <label
+            htmlFor="difficulty"
+            className="block mb-2 text-lg font-medium mr-2 w-32"
+          >
+            난이도 :
+          </label>
           <select
             name="difficulty"
             id="difficulty"
             value={quiz.difficulty}
             onChange={handleChange}
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
           >
             {difficultyOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -110,24 +121,11 @@ const SetupForm = () => {
           </select>
         </div>
 
-        {/* type */}
-        <div>
-          <label htmlFor="type">타입 : </label>
-          <select
-            name="type"
-            id="type"
-            value={quiz.type}
-            onChange={handleChange}
-          >
-            {typeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button type="submit" onClick={handleSubmit}>
+        <button
+          className="mt-8 text-white bg-green hover:opacity-70 transition-all font-medium rounded-lg text-lg px-5 py-2.5"
+          type="submit"
+          onClick={handleSubmit}
+        >
           퀴즈 풀기 시작
         </button>
       </form>

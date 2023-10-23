@@ -20,21 +20,19 @@ const SingleFeedback = () => {
   );
 
   return (
-    <div>
-      <h3>문제 카테고리 : {data?.category}</h3>
-      <hr />
+    <div className="text-center mt-10">
+      <div className="text-2xl font-semibold mb-4">
+        전체 퀴즈 문제 카테고리 : {data?.category}
+      </div>
+      {/* <hr className="border-t-2 border-gray-300 mb-6" /> */}
 
-      <div>
-        <div>
+      <div className="flex flex-col items-center ">
+        <div className="w-full md:w-3/4 lg:w-1/2">
           {data?.wrongResult?.map((item) => (
             <QuizMemo key={item.id} {...item} feedbackId={feedbackId} />
           ))}
         </div>
       </div>
-
-      <Link to="/">
-        <button>다른 문제 풀기</button>
-      </Link>
     </div>
   );
 };
