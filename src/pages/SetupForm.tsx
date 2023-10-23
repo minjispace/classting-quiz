@@ -11,7 +11,7 @@ import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
 import { useQuizContext } from "../context/quizContext";
 
-export type QuizType = {
+export type QuizInfoType = {
   amount: number;
   category: string;
   difficulty: string;
@@ -19,11 +19,11 @@ export type QuizType = {
 };
 
 const SetupForm = () => {
-  const { startQuizTime } = useQuizContext();
+  const { startQuiz } = useQuizContext();
   const navigate = useNavigate();
 
   // state define
-  const [quiz, setQuiz] = useState<QuizType>({
+  const [quiz, setQuiz] = useState<QuizInfoType>({
     amount: 1,
     category: "any",
     difficulty: "any",
@@ -50,7 +50,7 @@ const SetupForm = () => {
   // handleSubmit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    startQuizTime();
+    startQuiz(quiz);
     refetch();
   };
 
