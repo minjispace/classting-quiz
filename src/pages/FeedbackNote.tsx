@@ -1,27 +1,32 @@
 import { Link } from "react-router-dom";
 import { convertTimestampToDate } from "../utils/formatTime";
-import { useWrongAnswerContext } from "../context/\bwrongAnswerContext";
+import { getDataFromLocalStorage } from "../utils/localStorage.quizResult";
 
 const FeedbackNote = () => {
-  const { getWrongAnswers } = useWrongAnswerContext();
-
-  const wrongAnswerData = getWrongAnswers();
+  // 로컬 스토리지에서 데이터를 가져오기
+  const wrongAnswerData = getDataFromLocalStorage();
 
   return (
     <div>
       <h2>오답노트</h2>
-      {wrongAnswerData?.map((item, index) => {
-        const { category, question, correctAnswer, date } = item;
+      {!wrongAnswerData && <div>현재 정리된 오답 노트가 없습니다.</div>}
+
+      {wrongAnswerData?.map((item) => {
+        const { endTime, wrongResult, startTime, wrong } = item;
+
+        // 오답노트 리스트가 없다면 return
+        if (wrongResult.length === 0 || wrong === 0) return;
 
         return (
-          <ul style={{ backgroundColor: "gray" }} key={index}>
-            <h3>문제 카테고리 : {category}</h3>
-            <article>
-              <h3>문제 : {question}</h3>
-              <h2>정답 : {correctAnswer}</h2>
-              <p>{convertTimestampToDate(date)}</p>
-            </article>
-          </ul>
+          <>
+            <Link key={endTime} to={`/feed-back/${startTime}`}>
+              <div>
+                <button>
+                  {convertTimestampToDate(endTime)} 오답 노트 보러가기
+                </button>
+              </div>
+            </Link>
+          </>
         );
       })}
       <Link to="/">
