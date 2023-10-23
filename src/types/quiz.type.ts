@@ -1,3 +1,4 @@
+// quizDataType
 export type QuizDataType = {
   category: string;
   type: string;
