@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { getDataFromLocalStorage } from "../utils";
 import { QuizMemo, RedirectHome } from "../components";
 
@@ -24,10 +24,9 @@ const SingleFeedback = () => {
       <div className="text-2xl font-semibold mb-4">
         전체 퀴즈 문제 카테고리 : {data?.category}
       </div>
-      {/* <hr className="border-t-2 border-gray-300 mb-6" /> */}
 
-      <div className="flex flex-col items-center ">
-        <div className="w-full md:w-3/4 lg:w-1/2">
+      <div className="flex flex-col items-center">
+        <div className="p-4 w-full md:w-3/4 lg:w-1/2">
           {data?.wrongResult?.map((item) => (
             <QuizMemo key={item.id} {...item} feedbackId={feedbackId} />
           ))}

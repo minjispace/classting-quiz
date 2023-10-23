@@ -216,11 +216,11 @@ const Quiz = () => {
       )}
 
       {/* 타이머, 문제 수, 난이도, 전체 카테고리 */}
-      <div className="mt-10 flex justify-between w-full max-w-lg">
-        <div className="text-center">
+      <div className="mt-8 flex flex-col items-center lg:flex-row lg:items-start justify-between w-full max-w-lg">
+        <div className="text-center lg:text-left lg:mb-0 mb-6">
           <Timer />
         </div>
-        <div className=" text-white mb-6 bg-green p-2 rounded-lg">
+        <div className="text-white bg-green p-2 rounded-lg mb-6">
           <div>
             총 문제 수 :{" "}
             <span className="text-bold text-xl">{quizInfo.amount}</span>
@@ -232,7 +232,6 @@ const Quiz = () => {
           <div>
             전체 카테고리 :{" "}
             <span className="text-bold text-xl">
-              {" "}
               {
                 categoryOptions.find(
                   (option) => option.value === quizInfo.category,
@@ -276,7 +275,7 @@ const Quiz = () => {
         {answerSelected.state && (
           <button
             onClick={openModal}
-            className="mt-8 text-white  bg-green hover:opacity-70 transition-all font-medium rounded-lg text-lg px-5 py-2.5"
+            className="mt-8 text-white bg-green hover:opacity-70 transition-all font-medium rounded-lg text-lg px-5 py-2.5"
           >
             정답 확인
           </button>

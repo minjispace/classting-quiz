@@ -48,24 +48,24 @@ const SetupForm = () => {
   return (
     <section className="flex justify-center items-center text-center">
       <form className="max-w-md">
-        <div className="font-bold text-4xl mt-28 text-center">
+        <div className="font-bold text-4xl mt-20 text-center">
           클래스밍 퀴즈 세팅{" "}
         </div>
 
         {/* amount */}
-        <div className="flex items-center mt-10">
+        <div className="flex flex-col lg:flex-row items-center mt-10">
           <label
             htmlFor="amount"
-            className="block mb-2 text-lg font-medium mr-2 w-32"
+            className="block mb-2 text-lg font-medium lg:mr-2 w-full lg:w-32"
           >
-            문제수 :
+            문제수:
           </label>
           <select
             name="amount"
             id="amount"
             value={quiz.amount}
             onChange={handleChange}
-            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5"
           >
             {amountOptions.map((option) => (
               <option key={option} value={option}>
@@ -76,19 +76,19 @@ const SetupForm = () => {
         </div>
 
         {/* category */}
-        <div className="flex items-center mt-5">
+        <div className="flex flex-col lg:flex-row items-center mt-5">
           <label
             htmlFor="category"
-            className="block mb-2 text-lg font-medium mr-2 w-32"
+            className="block mb-2 text-lg font-medium lg:mr-2 w-full lg:w-32"
           >
-            카테고리 :
+            카테고리:
           </label>
           <select
             name="category"
             id="category"
             value={quiz.category}
             onChange={handleChange}
-            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5"
           >
             {categoryOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -99,19 +99,19 @@ const SetupForm = () => {
         </div>
 
         {/* difficulty */}
-        <div className="flex items-center mt-5">
+        <div className="flex flex-col lg:flex-row items-center mt-5">
           <label
             htmlFor="difficulty"
-            className="block mb-2 text-lg font-medium mr-2 w-32"
+            className="block mb-2 text-lg font-medium lg:mr-2 w-full lg:w-32"
           >
-            난이도 :
+            난이도:
           </label>
           <select
             name="difficulty"
             id="difficulty"
             value={quiz.difficulty}
             onChange={handleChange}
-            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5 "
+            className="bg-white border border-green text-sm rounded-lg block w-full p-2.5"
           >
             {difficultyOptions.map((option) => (
               <option key={option.value} value={option.value}>

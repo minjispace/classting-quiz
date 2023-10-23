@@ -27,8 +27,8 @@ const Result = () => {
       <div className="text-4xl font-bold p-4 rounded-lg mt-10">퀴즈 결과</div>
 
       {/* Description and Chart */}
-      <div className="flex justify-around items-center m-4">
-        <div className="bg-white rounded-lg p-8 shadow-md mr-10 min-w-fit">
+      <div className="flex flex-col lg:flex-row items-center lg:items-start m-4">
+        <div className="bg-white rounded-lg p-8 shadow-md lg:mr-10 lg:min-w-fit mb-4">
           <p>소요 시간 : {formatTime(data.endTime - data.startTime)}</p>
           <p>정답 개수 : {data.correct}개</p>
           <p>오답 수 : {data.wrong}개</p>
