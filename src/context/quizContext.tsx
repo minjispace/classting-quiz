@@ -15,7 +15,6 @@ export function QuizProvider({ children }: { children: ReactNode }) {
     amount: 1,
     category: "any",
     difficulty: "any",
-    type: "multiple",
   });
 
   const [quizStartTime, setStartTime] = useState<number>(-1);
