@@ -8,7 +8,7 @@ import {
 import { useQuery } from "react-query";
 import { getQuizData } from "../api/quizAPI";
 import Loading from "../components/Loading";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuizContext } from "../context/quizContext";
 
 export type QuizInfoType = {
@@ -59,6 +59,9 @@ const SetupForm = () => {
 
   return (
     <section>
+      <Link to="/feed-back">
+        <button>모든 오답노트 보기</button>
+      </Link>
       <form>
         <h2>퀴즈 풀기 셋팅</h2>
 
