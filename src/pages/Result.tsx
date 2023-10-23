@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useQuizContext } from "../context/quizContext";
 import { getDataFromLocalStorage, formatTime } from "../utils";
 import { RedirectHome, ResultChart } from "../components";
+import { useState } from "react";
+import Confetti from "react-confetti";
 
 const Result = () => {
   const { quizStartTime } = useQuizContext();
@@ -10,6 +12,10 @@ const Result = () => {
   const data = getDataFromLocalStorage()?.find(
     (item) => item.startTime === quizStartTime,
   );
+
+  // 만점인 경우에 confetti를 활성화시키는 상태 변수
+  const isPerfectScore = data?.wrongResult?.length === 0;
+  const [confettiActive, setConfettiActive] = useState(isPerfectScore);
 
   // 데이터가 없다면 홈으로
   if (!data || !data.startTime) {
@@ -53,6 +59,15 @@ const Result = () => {
           다른 문제 풀러가기
         </button>
       </Link>
+
+      {/* 만점일 때 confetti 효과 */}
+      {confettiActive && (
+        <Confetti
+          numberOfPieces={400}
+          recycle={false}
+          onConfettiComplete={() => setConfettiActive(false)}
+        />
+      )}
     </main>
   );
 };
