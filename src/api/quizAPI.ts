@@ -4,15 +4,12 @@ import { QuizInfoType } from "../types/quiz.type";
 const BASE_URL = "https://opentdb.com/api.php";
 
 const getQuizData = async (quiz: QuizInfoType) => {
-  const { amount, category, difficulty, type } = quiz;
+  const { amount, category, difficulty } = quiz;
 
   const params: Record<string, any> = {
     amount,
+    type: "multiple",
   };
-  // type이 any가 아닐경우만 params 추가
-  if (type !== "any") {
-    params["type"] = type;
-  }
 
   // category any가 아닐경우만 params 추가
   if (category !== "any") {
