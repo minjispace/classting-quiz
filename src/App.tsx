@@ -4,10 +4,12 @@ import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import FeedbackNote from "./pages/FeedbackNote";
 import SingleFeedback from "./pages/SingleFeedback";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<SetupForm />} />
         <Route path="/quiz" element={<Quiz />} />
