@@ -43,7 +43,7 @@ const SetupForm = () => {
   };
 
   // if isLoading
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loading data-testid="loading-component" />;
 
   return (
     <section className="flex justify-center items-center text-center">
