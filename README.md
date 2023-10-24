@@ -15,7 +15,7 @@
 
 ---
 ## 1. 결과물
-- [데모 사이트](https://classting-quiz.vercel.app/)
+- [데모 사이트](https://classting-minji-quiz.netlify.app/)
 - [github 주소](https://github.com/minjispace/classting-quiz) 
 - [github projects](https://github.com/users/minjispace/projects/5/views/1)
 
@@ -324,7 +324,7 @@
 ---
 
 ## 9. 배포
-Vercel은 무료 도메인을 제공하고, Vercel 대시보드에서 도메인 설정을 관리할 수 있다는 장점에서 vercel을 선택해 배포했습니다.
+Netlify는 무료 도메인을 제공하고, Netlify 대시보드에서 도메인 설정을 관리할 수 있다는 장점에서 Netlify을 선택해 배포했습니다.
 
 #### **1. 배포 과정**
 1. GitHub Repository 연결
