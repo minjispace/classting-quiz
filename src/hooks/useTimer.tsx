@@ -9,7 +9,7 @@ const useTimer = () => {
   const timerStart = () => setIsRunning(true);
 
   useEffect(() => {
-    let interval = 0;
+    let interval: NodeJS.Timeout | number = 0;
     if (isRunning) {
       interval = setInterval(() => {
         if (seconds < 59) {
